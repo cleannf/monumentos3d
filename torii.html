@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gran Torii de Itsukushima</title>
+
+  <!-- Fuentes locales -->
+  <style>
+    @font-face {
+      font-family: 'Limelight';
+      src: url('assets/fonts/Limelight-Regular.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Karla';
+      src: url('assets/fonts/Karla-VariableFont_wght.ttf') format('truetype');
+    }
+  </style>
+
+  <!-- Estilos globales -->
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body>
+  <!-- Barra de botones -->
+  <div class="monumento-topbar">
+    <button class="monumento-button" data-topic="historia">Historia</button>
+    <button class="monumento-button" data-topic="autor">Autor</button>
+    <button class="monumento-button" data-topic="definicion">Definición artística</button>
+    <button class="monumento-button" data-topic="tecnica">Técnica</button>
+    <button class="monumento-button" data-topic="detalles">Detalles relevantes</button>
+  </div>
+
+  <!-- Bloque informativo -->
+  <div class="monumento-info">
+    <p class="monumento-pais">Japón</p>
+    <h1 class="monumento-titulo">Gran Torii de Itsukushima</h1>
+    <h2 class="monumento-instrucciones-titulo">Instrucciones:</h2>
+    <p class="monumento-instrucciones-texto">
+      Seleccione uno de los temas que desee conocer acerca del monumento.
+    </p>
+  </div>
+
+  <!-- Botón volver -->
+  <button class="monumento-volver">Volver</button>
+
+  <!-- Canvas Babylon -->
+  <canvas class="monumento-canvas" id="canvasTorii" touch-action="none"></canvas>
+
+  <!-- Babylon.js -->
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="scripts/torii.js"></script>
+</body>
+</html>

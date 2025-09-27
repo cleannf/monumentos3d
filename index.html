@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Explora Monumentos del Mundo</title>
+
+  <!-- Fuentes locales -->
+  <style>
+    @font-face {
+      font-family: 'Limelight';
+      src: url('assets/fonts/Limelight-Regular.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Karla';
+      src: url('assets/fonts/Karla-VariableFont_wght.ttf') format('truetype');
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      font-family: 'Karla', system-ui, sans-serif;
+    }
+  </style>
+
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body>
+  <!-- Título -->
+<div id="uiContainer">
+  <h1 id="titulo" class="fade-in">
+    <span>Explora algunos de los</span><br>
+    <span>Monumentos del Mundo</span>
+  </h1>
+</div>
+
+  <!-- Instrucciones -->
+<div id="instrucciones" class="fade-in">
+  <h2>Instrucciones</h2>
+  <ol>
+    <li><span class="num">1.</span> Desplázate manteniendo presionado clic izquierdo y arrastra.</li>
+    <li><span class="num">2.</span> Mantén el cursor sobre el pin rojo.</li>
+    <li><span class="num">3.</span> Presiona clic sobre el pin rojo para observar el monumento.</li>
+  </ol>
+</div>
+
+  <!-- Panel de información -->
+  <div id="infoPanel">
+    <h2 id="monumentoTitulo"></h2>
+    <p id="monumentoPais"></p>
+  </div>
+
+  <!-- Overlay de transición -->
+  <div class="transition-overlay"></div>
+
+  <!-- Canvas -->
+  <canvas id="renderCanvas" touch-action="none" aria-label="Escena 3D"></canvas>
+
+  <!-- Babylon.js -->
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>
