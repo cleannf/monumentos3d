@@ -1,5 +1,14 @@
+function esMovil() {
+  return window.innerWidth <= 768;
+}
+
 const canvas = document.getElementById("renderCanvas");
+canvas.setAttribute("tabindex", "0"); // permite que el canvas reciba foco
+canvas.addEventListener("touchstart", () => {
+  canvas.focus();
+});
 const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
+engine.getInputElement().setAttribute("touch-action", "none");
 
 const createScene = async () => {
   const scene = new BABYLON.Scene(engine);
@@ -36,8 +45,14 @@ const createScene = async () => {
   bgSphere.material = bgMat;
   bgSphere.isPickable = false;
 
+  // Cargar modelos según dispositivo
+  const earthFile = esMovil() ? "earth_mobile.glb" : "earth.glb";
+  const pinFiles = esMovil()
+    ? ["Pin_1_mobile.glb", "Pin_2_mobile.glb", "Pin_3_mobile.glb", "Pin_4_mobile.glb"]
+    : ["Pin_1.glb", "Pin_2.glb", "Pin_3.glb", "Pin_4.glb"];
+
   // --- CARGAR PLANETA ---
-  await BABYLON.SceneLoader.AppendAsync("models/", "earth.glb", scene);
+  await BABYLON.SceneLoader.AppendAsync("models/", earthFile, scene);
 
   // Ajustar cámara al planeta
   const earth = scene.meshes.find(m => m.name && m.name !== "__root__" && m.name !== "backgroundSphere");
@@ -52,10 +67,12 @@ const createScene = async () => {
   }
 
   // --- CARGAR PINES ---
-  const pinFiles = ["Pin_1.glb", "Pin_2.glb", "Pin_3.glb", "Pin_4.glb"];
   for (const file of pinFiles) {
-    await BABYLON.SceneLoader.AppendAsync("models/", file, scene);
+  await BABYLON.SceneLoader.AppendAsync("models/", file, scene);
   }
+  console.log("=== LISTA DE MESHES EN LA ESCENA ===");
+  scene.meshes.forEach(m => console.log(m.name));
+
   console.log("=== LISTA DE MESHES EN LA ESCENA ===");
   scene.meshes.forEach(m => console.log(m.name));
 
@@ -64,83 +81,99 @@ const createScene = async () => {
   const tituloEl = document.getElementById("monumentoTitulo");
   const paisEl = document.getElementById("monumentoPais");
 
-  const pinInfo = {
-  "Pin_1_primitive0": { pais: "Brasil", monumento: "Cristo Redentor", destino: "cristo.html" },
-  "Pin_2_primitive0": { pais: "Estados Unidos", monumento: "Estatua de la Libertad", destino: "libertad.html" },
-  "Pin_3_primitive0": { pais: "Francia", monumento: "Torre de París", destino: "torre.html" },
-  "Pin_4_primitive0": { pais: "Japón", monumento: "Torii de Itsukushima Shrine", destino: "torii.html" }
+  const btnVisitar = document.getElementById("btnVisitar");
+  const pinInfoDesktop = {
+    "Pin_1_primitive0": { pais: "Brasil", monumento: "Cristo Redentor", destino: "cristo.html" },
+    "Pin_2_primitive0": { pais: "Estados Unidos", monumento: "Estatua de la Libertad", destino: "libertad.html" },
+    "Pin_3_primitive0": { pais: "Francia", monumento: "Torre de París", destino: "torre.html" },
+    "Pin_4_primitive0": { pais: "Japón", monumento: "Torii de Itsukushima Shrine", destino: "torii.html" }
   };
 
-  // Asignar acciones a cada pin
-  Object.keys(pinInfo).forEach(pinName => {
-    const pinMesh = scene.getMeshByName(pinName);
-    if (pinMesh) {
-      pinMesh.isPickable = true;
-      pinMesh.actionManager = new BABYLON.ActionManager(scene);
+  const pinInfoMovil = {
+    "Pin1movil_primitive0": { pais: "Brasil", monumento: "Cristo Redentor", destino: "cristo.html" },
+    "Pin2movil_primitive0": { pais: "Estados Unidos", monumento: "Estatua de la Libertad", destino: "libertad.html" },
+    "Pin3movil_primitive0": { pais: "Francia", monumento: "Torre de París", destino: "torre.html" },
+    "Pin4movil_primitive0": { pais: "Japón", monumento: "Torii de Itsukushima Shrine", destino: "torii.html" }
+  };
+  const pinInfo = esMovil() ? pinInfoMovil : pinInfoDesktop;
 
-      // Mostrar info al pasar el cursor
-      pinMesh.actionManager.registerAction(
+console.log("=== ASIGNANDO ACCIONES A LOS PINES ===");
+console.log("Usando pinInfo:", pinInfo);
+
+Object.keys(pinInfo).forEach(pinKey => {
+  const targetMesh = scene.getMeshByName(pinKey);
+  if (targetMesh) {
+    console.log("🎯 Asignando acciones a:", targetMesh.name);
+    targetMesh.isVisible = true;
+    targetMesh.setEnabled(true);
+    targetMesh.isPickable = true;
+    targetMesh.actionManager = new BABYLON.ActionManager(scene);
+
+    // Hover (solo escritorio)
+    if (!esMovil()) {
+      targetMesh.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(
           BABYLON.ActionManager.OnPointerOverTrigger,
           () => {
-            tituloEl.textContent = pinInfo[pinName].monumento;
-            paisEl.textContent = pinInfo[pinName].pais;
+            tituloEl.textContent = pinInfo[pinKey].monumento;
+            paisEl.textContent = pinInfo[pinKey].pais;
             infoPanel.style.display = "block";
+            btnVisitar.style.display = "none";
           }
         )
       );
 
-      // Ocultar info al salir el cursor
-      pinMesh.actionManager.registerAction(
+      targetMesh.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(
           BABYLON.ActionManager.OnPointerOutTrigger,
           () => {
             infoPanel.style.display = "none";
+            btnVisitar.style.display = "none";
           }
         )
       );
-    } else {
-      console.warn("No se encontró el mesh:", pinName);
     }
-  });
 
-  scene.meshes.forEach(mesh => {
-  for (const key in pinInfo) {
-    if (mesh.name.includes(key)) {
-      mesh.isPickable = true;
-      mesh.actionManager = new BABYLON.ActionManager(scene);
+    // Clic (móvil y escritorio)
+    targetMesh.actionManager.registerAction(
+      new BABYLON.ExecuteCodeAction(
+        BABYLON.ActionManager.OnPickTrigger,
+        () => {
+          console.log("✅ Pin tocado:", targetMesh.name);
+          console.log("✅ Ejecutando OnPickTrigger para:", targetMesh.name);
+          tituloEl.textContent = pinInfo[pinKey].monumento;
+          paisEl.textContent = pinInfo[pinKey].pais;
+          infoPanel.style.display = "block";
 
-      // Hover: mostrar panel
-      mesh.actionManager.registerAction(
-        new BABYLON.ExecuteCodeAction(
-          BABYLON.ActionManager.OnPointerOverTrigger,
-          () => {
-            tituloEl.textContent = pinInfo[key].monumento;
-            paisEl.textContent = pinInfo[key].pais;
-            infoPanel.style.display = "block";
+          if (esMovil()) {
+            btnVisitar.style.display = "inline-block";
+            btnVisitar.onclick = () => {
+              irAMonumento(pinInfo[pinKey].destino);
+            };
+          } else {
+            btnVisitar.style.display = "none";
+            irAMonumento(pinInfo[pinKey].destino);
           }
-        )
-      );
+        }
+      )
+    );
+  } else {
+    console.warn("⚠️ No se encontró el mesh para:", pinKey);
+  }
+});
 
-      // Salida del cursor: ocultar panel
-      mesh.actionManager.registerAction(
-        new BABYLON.ExecuteCodeAction(
-          BABYLON.ActionManager.OnPointerOutTrigger,
-          () => {
-            infoPanel.style.display = "none";
-          }
-        )
-      );
+// 🔽 Detectar clic o toque fuera de los pines
+scene.onPointerObservable.add((pointerInfo) => {
+  if (pointerInfo.type === BABYLON.PointerEventTypes.POINTERDOWN) {
+    const pickedMesh = pointerInfo.pickInfo?.pickedMesh;
 
-      //  Clic: redirigir a la página del monumento
-      mesh.actionManager.registerAction(
-        new BABYLON.ExecuteCodeAction(
-          BABYLON.ActionManager.OnPickTrigger,
-          () => {
-            irAMonumento(pinInfo[key].destino);
-          }
-        )
-      );
+    // Verificar si el mesh tocado está en pinInfo
+    const nombresDePines = Object.keys(pinInfo);
+    const esPin = pickedMesh && nombresDePines.includes(pickedMesh.name);
+
+    if (!esPin) {
+      infoPanel.style.display = "none";
+      btnVisitar.style.display = "none";
     }
   }
 });
@@ -161,6 +194,9 @@ function irAMonumento(url) {
 // --- INICIAR ESCENA ---
 (async function () {
   const scene = await createScene();
+  scene.onPointerObservable.add((pointerInfo) => {
+    console.log("📱 Evento táctil:", pointerInfo.type, pointerInfo.pickInfo?.pickedMesh?.name);
+  });
   engine.runRenderLoop(() => {
     if (scene) scene.render();
   });

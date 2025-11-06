@@ -32,12 +32,14 @@ html, body {
   animation-delay: 0.5s; /* aparece primero */
 }
 
-#instrucciones.fade-in {
-  animation-delay: 2s; /* aparece después del título */
+#instrucciones-desktop.fade-in,
+#instrucciones-movil.fade-in {
+  animation-delay: 2s;
 }
 
-/* Instrucciones a la izquierda centradas verticalmente */
-#instrucciones {
+/* Instrucciones escritorio */
+#instrucciones-desktop {
+  display: block;
   position: fixed;
   left: 30px;
   top: 50%;
@@ -49,23 +51,64 @@ html, body {
   text-align: justify;
   z-index: 25;
 }
-#instrucciones h2 {
+#instrucciones-desktop h2 {
   margin: 0 0 10px 0;
   font-family: 'Limelight', cursive;
   font-size: 20px;
   color: #ffffff;
 }
-#instrucciones ol {
+#instrucciones-desktop ol {
   margin: 0;
   padding: 0;
 }
-#instrucciones li {
+#instrucciones-desktop li {
   display: block;
   margin: 10px 0;
   padding-left: 36px;
   position: relative;
 }
-#instrucciones .num {
+#instrucciones-desktop .num {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 700;
+  color: #ffffff;
+  width: 28px;
+  display: inline-block;
+  text-align: left;
+}
+
+/* Instrucciones móvil (ocultas por defecto) */
+#instrucciones-movil {
+  display: none;
+  position: fixed;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 340px;
+  color: #e6eef6;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: justify;
+  z-index: 25;
+}
+#instrucciones-movil h2 {
+  margin: 0 0 10px 0;
+  font-family: 'Limelight', cursive;
+  font-size: 20px;
+  color: #ffffff;
+}
+#instrucciones-movil ol {
+  margin: 0;
+  padding: 0;
+}
+#instrucciones-movil li {
+  display: block;
+  margin: 10px 0;
+  padding-left: 36px;
+  position: relative;
+}
+#instrucciones-movil .num {
   position: absolute;
   left: 0;
   top: 0;
@@ -242,4 +285,288 @@ html, body {
 .transition-overlay.active {
   opacity: 1;
   pointer-events: all;
+}
+
+/* Mostrar solo instrucciones de escritorio por defecto */
+#instrucciones-desktop {
+  display: block;
+}
+
+#instrucciones-movil {
+  display: none;
+}
+
+/* === Estilos para móvil === */
+@media (max-width: 768px) {
+  /* Título centrado arriba */
+  #uiContainer {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  #titulo {
+    font-size: 1.6rem;
+    padding: 0 15px;
+    line-height: 1.2;
+  }
+
+  /* Ocultar instrucciones escritorio */
+  #instrucciones-desktop {
+    display: none;
+  }
+
+  /* Mostrar instrucciones móvil */
+  #instrucciones-movil {
+    display: block;
+    position: absolute;
+    top: 130px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 360px;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    box-sizing: border-box;
+    z-index: 25;
+  }
+
+  #instrucciones-movil h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  #instrucciones-movil li {
+    font-size: 14px;
+    padding-left: 30px;
+  }
+
+  #instrucciones-movil .num {
+    width: 24px;
+    font-size: 14px;
+  }
+
+  /* Panel de información abajo centrado */
+  #infoPanel {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 250px;
+    height: auto;
+    max-height: 80px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    text-align: center;
+    z-index: 30;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  #infoPanel h2 {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+
+  #infoPanel p {
+    font-size: 1rem;
+  }
+}
+
+#btnVisitar {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #353535b7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 1000;
+}
+
+/* Efecto al presionar */
+#btnVisitar:active {
+  transform: translateX(-50%) scale(0.96);
+  background-color: #032a53;
+}
+
+/* estilo monumentos version movil */
+@media (min-width: 769px) {
+  .monumento-topbar {
+    display: flex;
+  }
+
+  .monumento-menu-container {
+    display: none;
+  }
+
+  .monumento-canvas {
+    position: absolute;
+    z-index: 0;
+  }
+}
+
+/* Mostrar hamburguesa en móvil, ocultar barra */
+@media (max-width: 768px) {
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #2c2c2c !important;
+  }
+
+  .monumento-topbar {
+    display: none;
+  }
+
+  .monumento-menu-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 500px;       /* ✅ Solo ocupa lo que necesita */
+    padding: 6px 12px;         /* ✅ Ajustado para no invadir */
+    background: rgb(34, 34, 34);
+    z-index: 9999;
+    box-sizing: border-box;
+    overflow: hidden;          /* ✅ Corrige el typo */
+    height: auto;
+    border-radius: 6px;        /* Opcional: mejora visual en móvil */
+  }
+
+  .hamburguesa-btn {
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px 12px;
+    position: relative;
+    z-index: 9999;
+  }
+
+  .menu-opciones {
+    display: none;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .menu-opciones.activo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+    height: auto;
+    animation: slideDown 0.3s ease forwards;
+  }
+
+  .menu-opciones .monumento-button {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    margin: 2px 0;
+    border-radius: 6px;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: rgb(48, 48, 48);
+  }
+
+  .menu-opciones .monumento-button.active {
+    background-color: #dcdcdc; /* Fondo claro */
+    color: #222;               /* Texto oscuro */
+    font-weight: bold;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Ajustes visuales generales en móvil */
+  .monumento-titulo {
+    font-size: 1.3rem;
+    font-family: 'Limelight', cursive;
+    color: white;
+    text-align: center;    
+    margin: 0 0 12px 0;
+    position: relative;
+    top: -14px; /* 🔼 ajusta este valor para subir o bajar */
+    z-index: 10000; /* ✅ Más alto que el menú */
+    pointer-events: none; /* ✅ No bloquea clics en el menú */
+  }
+
+  .monumento-instrucciones-titulo {
+    font-size: 1.1rem;
+    margin: 0px 0 8px 0;
+    text-align: center;
+    position: relative;
+    top: 20px; /* 🔼 ajusta este valor para subir o bajar */
+  }
+
+  .monumento-instrucciones-texto {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: justify;         /* 🔹 Justifica el texto */
+    margin: 0 auto;              /* 🔹 Centra el bloque */
+    max-width: 350px;            /* 🔹 Controla el ancho */
+    color: #ffffff;              /* 🔹 Texto blanco */
+    position: relative;
+    top: 25px; /* 🔼 ajusta este valor para subir o bajar */
+  }
+
+  .monumento-pais {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+    top: 40px;
+    z-index: 10000; /* ✅ Más alto que el menú */
+    pointer-events: none; /* ✅ No bloquea clics en el menú */
+  }
+
+  .monumento-info {
+    position: static;
+    margin: -20px auto;
+    padding: 0 20px;
+    max-width: 350px;       /* 🔹 Igual que instrucciones */
+    text-align: justify;
+    color: #ffffff;    /* 🔹 Si quieres justificar todo */
+  }
+
+  .monumento-volver {
+    position: fixed;
+    bottom: 30px;
+    left: 15%;
+    transform: translateX(-50%);
+    font-size: 1rem;
+    padding: 10px 16px;
+    border-radius: 6px;
+    z-index: 10000;
+  }
+
+  .monumento-canvas {
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+  }
 }

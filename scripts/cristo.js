@@ -12,7 +12,8 @@ const createScene = async () => {
   const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
   light.intensity = 1;
 
-  await BABYLON.SceneLoader.AppendAsync("models/", "cristo.glb", scene);
+  const modelo = esMovil() ? "cristo_movil.glb" : "cristo.glb";
+  await BABYLON.SceneLoader.AppendAsync("models/", modelo, scene);
 
   cristoMesh = scene.meshes.find(m => m.name && m.name !== "__root__");
   if (cristoMesh) {
@@ -58,6 +59,20 @@ const instruccionesTexto = document.querySelector(".monumento-instrucciones-text
 const instruccionesTitulo = document.querySelector(".monumento-instrucciones-titulo");
 const infoBlock = document.querySelector(".monumento-info");
 
+// Activar menú hamburguesa solo en móvil
+function esMovil() {
+  return window.innerWidth <= 768;
+}
+
+const menuToggle = document.getElementById("menuToggle");
+const menuOpciones = document.getElementById("menuOpciones");
+
+if (esMovil() && menuToggle && menuOpciones) {
+  menuToggle.addEventListener("click", () => {
+    menuOpciones.classList.toggle("activo");
+  });
+}
+
 // Crear contenedor dinámico
 const infoContenido = document.createElement("div");
 infoContenido.style.marginTop = "40px";
@@ -87,6 +102,10 @@ document.querySelectorAll(".monumento-button").forEach(btn => {
     void infoContenido.offsetWidth; // forzar reflow
     infoContenido.classList.add("fade-in");
     infoContenido.style.display = "block";
+
+    if (esMovil()) {
+    menuOpciones.classList.remove("activo");
+    }
   });
 });
 

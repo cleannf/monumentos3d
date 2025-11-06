@@ -21,13 +21,26 @@
   <link rel="stylesheet" href="styles/styles.css" />
 </head>
 <body>
-  <!-- Barra de botones -->
+  <!-- Barra de botones para escritorio -->
   <div class="monumento-topbar">
     <button class="monumento-button" data-topic="historia">Historia</button>
     <button class="monumento-button" data-topic="autor">Autor</button>
     <button class="monumento-button" data-topic="definicion">Definición artística</button>
     <button class="monumento-button" data-topic="tecnica">Técnica</button>
     <button class="monumento-button" data-topic="detalles">Detalles relevantes</button>
+  </div>
+
+  <!-- Menú hamburguesa para móvil -->
+  <div class="monumento-menu-container">
+    <button id="menuToggle" class="hamburguesa-btn">☰</button>
+
+    <div id="menuOpciones" class="menu-opciones">
+      <button class="monumento-button" data-topic="historia">Historia</button>
+      <button class="monumento-button" data-topic="autor">Autor</button>
+      <button class="monumento-button" data-topic="definicion">Definición artística</button>
+      <button class="monumento-button" data-topic="tecnica">Técnica</button>
+      <button class="monumento-button" data-topic="detalles">Detalles relevantes</button>
+    </div>
   </div>
 
   <!-- Bloque informativo -->
@@ -44,7 +57,14 @@
   <button class="monumento-volver">Volver</button>
 
   <!-- Canvas Babylon -->
-  <canvas class="monumento-canvas" id="canvasCristo" touch-action="none"></canvas>
+  <canvas
+    class="monumento-canvas"
+    id="canvasCristo"
+    touch-action="none"
+    role="img"
+    aria-label="Modelo 3D del Cristo Redentor en Brasil"
+    tabindex="0"
+  ></canvas>
 
   <!-- Babylon.js -->
   <script src="https://cdn.babylonjs.com/babylon.js"></script>
